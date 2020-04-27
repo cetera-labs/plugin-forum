@@ -13,7 +13,7 @@ Ext.define('Plugin.forum.ReplaceWindow', {
     initComponent : function() {
         this.items = this.buildTree();
            
-        ForumsReplaceWindow.superclass.initComponent.call(this);
+        this.callParent();
         
         this.tree.getSelectionModel().on('selectionchange', function(sm, node){
             Ext.getCmp('tb_replace_group_delete').setDisabled(!this.isSelectedGroup());
@@ -26,9 +26,7 @@ Ext.define('Plugin.forum.ReplaceWindow', {
         }, this);
         
         this.buildEditWindow();
-        this.editForm.getForm().findField('idgroup').getStore().load();
-		
-		this.callParent();
+        //this.editForm.getForm().findField('idgroup').getStore().load();
     },
     
     onDestroy : function(){
@@ -256,7 +254,7 @@ Ext.define('Plugin.forum.ReplaceWindow', {
             useArrows: true,
             border: false,
             rootVisible: false,
-            dataUrl: '</plugins/forum/scripts/data_replace.php',
+            dataUrl: '/plugins/forum/scripts/data_replace.php',
             containerScroll: true,
             autoScroll: true,
             root: {id: 'root'},

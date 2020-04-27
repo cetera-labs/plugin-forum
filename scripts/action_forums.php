@@ -27,7 +27,7 @@ if ($action == 'delete_forum') {
     if (!$user->allowCat(PERM_CAT_ADMIN, $id)) 
         throw new Exception_CMS(Exception_CMS::NO_RIGHTS);
 
-    $c = Catalog::getById($id);
+    $c = \Cetera\Catalog::getById($id);
     $c->delete();
 
 }
@@ -38,19 +38,19 @@ if ($action == 'save_forum') {
         if (!$user->allowCat(PERM_CAT_ADMIN, $_POST['parentid']))
             throw new Exception_CMS(Exception_CMS::NO_RIGHTS);    
         
-        $c = Catalog::getById($_POST['parentid']); 
+        $c = \Cetera\Catalog::getById($_POST['parentid']); 
         $id = $c->createChild(array(
         	'name'		=> $_POST['name'],
         	'alias'		=> $_POST['alias'],
-        	'describ'	=> $_POST['describ'],
-        	'typ'		  => ObjectDefinition::findByAlias(FORUMS_TYPE)->id,
+//        	'describ'	=> $_POST['describ'],
+        	'typ'		  => \Cetera\ObjectDefinition::findByAlias(FORUMS_TYPE)->id,
         	'link'		=> false,
 //        	'recurse'	=> false,
         	'server'    => false
         ));
-        $catalog = Catalog::getById($id);
+        $catalog = \Cetera\Catalog::getById($id);
     } else {
-        $catalog = Catalog::getById($id);
+        $catalog = \Cetera\Catalog::getById($id);
                
         if (isset($_POST['parentid']) && ((int)$_POST['parentid'] != $catalog->parent->id)) 
             $catalog->move((int)$_POST['parentid']);
@@ -65,12 +65,12 @@ if ($action == 'save_forum') {
 }
 
 if ($action == 'get_forum') {
-    $catalog = Catalog::getById($id);
+    $catalog = \Cetera\Catalog::getById($id);
     $res['data'] = array(
         'name'        => $catalog->name,
         'alias'       => $catalog->alias,
-        'pic'         => $catalog->pic,
-        'describ'     => $catalog->describ,
+        //'pic'         => $catalog->pic,
+        //'describ'     => $catalog->describ,
         'parentid'    => $catalog->parent->id,
         'parentpath'  => $catalog->parent->getTreePath(),
         'parentname'  => $catalog->parent->getPath()->implode(),
@@ -147,7 +147,7 @@ if ($action == 'permissions') {
 }
 
 if ($action == 'delete' && is_array($sel)) {
-    $catalog = Catalog::getById($id);
+    $catalog = \Cetera\Catalog::getById($id);
 	foreach ($sel as $val) {
 	   $m = \Forum\Post::getById($val, $catalog->materialsType, $catalog->materialsTable);
        $m->delete();
@@ -157,7 +157,7 @@ if ($action == 'delete' && is_array($sel)) {
 }
 
 if (($action == 'pub' || $action == 'unpub' || $action == 'move' || $action == 'close' || $action == 'open') && is_array($sel)) {
-    $catalog = Catalog::getById($id);
+    $catalog = \Cetera\Catalog::getById($id);
     
     $cats = "A.idcat=$id";
 

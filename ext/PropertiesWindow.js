@@ -27,6 +27,8 @@ Ext.define('Plugin.forum.PropertiesWindow', {
        
         // список разрешений
         this.permGrid = new Ext.grid.GridPanel({
+            margin: '5 0 0 0',
+			anchor:   '100% 45%',			
             enableHdMenu     : false,
             enableColumnMove : false,
             enableColumnResize: false,
@@ -61,12 +63,20 @@ Ext.define('Plugin.forum.PropertiesWindow', {
         });
         
         // список групп
-        this.groupsGrid = new Ext.grid.GridPanel({
+        this.groupsGrid = Ext.create('Ext.grid.Panel', {
             loadMask: true,
-            store : new Ext.data.JsonStore({
-                root: 'rows',
-                fields: ['id', 'name'],
-                url: 'include/data_groups.php?all=1',
+			anchor:   '100% 45%',
+            store : new Ext.data.JsonStore({				
+				fields: ['id', 'name'],                  				
+				proxy: {
+					type: 'ajax',
+					url: 'include/data_groups.php',
+					reader: {
+						type: 'json',
+						root: 'rows'
+					}
+				},					
+				
                 listeners: {
                     'load': {
                         fn: function() {
@@ -145,7 +155,8 @@ Ext.define('Plugin.forum.PropertiesWindow', {
                         allowBlank:false,
                         nolink: 1,
                         rule: Config.permissions.PERM_CAT_ADMIN
-                    }),
+                    })
+					/*,
                     Ext.create('Cetera.field.File', {
                         fieldLabel: _('Картинка'),
                         name: 'pic'
@@ -155,7 +166,7 @@ Ext.define('Plugin.forum.PropertiesWindow', {
                         name:'describ',
                         fieldLabel:_('Описание'),
                         height: 250
-                    }
+                    }*/
                 ]
             },{
                 title: _('Разрешения'),
@@ -208,8 +219,8 @@ Ext.define('Plugin.forum.PropertiesWindow', {
         this.groupsGrid.store.reload();
         this.permGrid.store.removeAll();
         this.tabs.setActiveTab(0);
-        
         this.forumId = id;
+		
         if (id > 0) {
             Ext.Ajax.request({
                 url: '/plugins/forum/scripts/action_forums.php',
@@ -227,7 +238,7 @@ Ext.define('Plugin.forum.PropertiesWindow', {
                     p.setDisplayValue(obj.data.parentname);
                     p.path = obj.data.parentpath;
                     this.setTitle(_('Свойства') + ': ' + obj.data.name);
-                    ForumsPropertiesWindow.superclass.show.call(this);
+                    this.callParent();
                 }
             });
         } else {
@@ -237,7 +248,7 @@ Ext.define('Plugin.forum.PropertiesWindow', {
             p.setDisplayValue('');
             p.path = '';
             this.setTitle(_('Новый форум'));
-            ForumsPropertiesWindow.superclass.show.call(this);
+            this.callParent();
         }
     },
     

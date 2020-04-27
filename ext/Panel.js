@@ -312,7 +312,7 @@ Ext.define('Plugin.forum.Panel', {
         Ext.Loader.loadScript({
             url: '/cms/include/ui_material_edit.php?type='+this.mat_type+'&idcat='+idcat+'&id='+id+'&height='+this.editWindow.height,
             onLoad: function() { 
-                var cc = safe_new('MaterialEditor'+mat_type, {win: win});
+				var cc = Ext.create( 'MaterialEditor'+mat_type , {win: win});
                 if (cc) cc.show();
             }
         });

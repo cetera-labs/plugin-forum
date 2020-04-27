@@ -10,7 +10,7 @@ try {
     include_once('common_bo.php');
     
     $m_id     = (int)$_REQUEST['id'];
-    $catalog = Catalog::getById($m_id);
+    $catalog = \Cetera\Catalog::getById($m_id);
     
     $parent = (int)$_REQUEST['parent'];
     
