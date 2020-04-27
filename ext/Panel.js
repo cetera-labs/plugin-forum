@@ -26,8 +26,6 @@ Ext.define('Plugin.forum.Panel', {
     
     initComponent : function() {
 		
-		this.treeContainer = mainTree.up('tabpanel');
-   
         this.store = Ext.create('Ext.data.JsonStore', {
             autoDestroy: true,
             fields: ['icon_pub','icon_close','name',{name: 'dat', type: 'date', dateFormat: 'timestamp'},'autor','answers','disabled'],
@@ -256,8 +254,9 @@ Ext.define('Plugin.forum.Panel', {
             ]    
         });
         
-        treeContainer.add(this.forums);
-        treeContainer.doLayout(); 
+		this.treeContainer = mainTree.up('tabpanel');
+        this.treeContainer.add(this.forums);
+        this.treeContainer.doLayout(); 
         
         this.bbar = new Ext.PagingToolbar({
             store: this.store
