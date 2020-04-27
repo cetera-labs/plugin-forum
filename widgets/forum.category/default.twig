@@ -1,0 +1,142 @@
+<div id="{{ widget.uniqueId }}">
+    {% block html %}
+
+        {% if widget.error404 %}
+
+            {% if widget.getParam('page404_template') %}
+                {% include widget.getParam('page404_template') %}
+            {% else %}
+                {% include "@widget/_common/page404.twig" %}
+            {% endif %}
+
+        {% elseif widget.material %}
+
+            <div class="row">
+                <div class="column">
+                    {% widget 'Breadcrumbs' %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="column">
+                    <h1>{{ widget.material.name }}</h1>
+                </div>
+            </div>
+            <div class="{{ widget.getParam('css_class') }}">
+                <div class="row">
+                    <main class="column">
+                        {% widget 'Forum.Topic.Item' with { material_id: widget.material.id, posts_limit: widget.getParam('posts_limit') } %}
+                    </main>
+                </div>
+            </div>
+
+        {% else %}
+
+            <div class="row">
+                <div class="column">
+                    {% widget 'Breadcrumbs' %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="column">
+                    <h1>{{ widget.catalog.name }}</h1>
+                </div>
+            </div>
+            <div class="{{ widget.getParam('css_class') }}">
+                <div class="row">
+                    <aside class="large-3 medium-4 column">
+                        <div data-toggle="menu-catalog" class="hide-for-medium button expanded"><i class="fa fa-bars">
+                                &#160;</i>{{ _('Разделы') }}</div>
+
+                        <div id="menu-catalog" data-toggler="hide-for-small-only"
+                             class="nav-catalog__group callout hide-for-small-only">
+                            {% block left_column %}
+                                {% widget 'Menu' with { catalog: widget.getParam('forum_catalog'), depth:0, expand_active: 1, css_class: 'vertical menu', css_class_submenu: 'vertical menu nested' } %}
+                            {% endblock %}
+                        </div>
+                    </aside>
+                    <main class="large-9 medium-8 column">
+                        {% widget 'Forum.Topic.List' with { ajax: 0, iterator: widget.iterator, limit: widget.getParam('list_limit'), paginator: true, forum_catalog: widget.getParam('forum_catalog') } %}
+                        {% if application.user %}
+                            <hr><br>
+                            <h3>{{ _('Подписка на новые темы') }}</h3>
+                            <a href="" class="button x-subscribe{% if widget.hasSubscriber() %} hide{% endif %}"
+                               data-category="{{ widget.catalog.id }}">{{ _('Подписаться') }}</a>
+                            <a href="" class="button x-unsubscribe{% if not widget.hasSubscriber() %} hide{% endif %}"
+                               data-category="{{ widget.catalog.id }}">{{ _('Отписаться') }}</a>
+                        {% endif %}
+                    </main>
+                </div>
+            </div>
+
+        {% endif %}
+    {% endblock %}
+</div>
+
+{% set script %}
+    <script>
+        {% block script %}
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            {% if not widget.material %}
+
+            function send_subscription(action, id, successMsq) {
+                $.ajax({
+                    url: '/plugins/forum/ajax.php?action=' + action + '&id=' + id,
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data > 0) {
+                            $('.x-subscribe').toggleClass('hide');
+                            $('.x-unsubscribe').toggleClass('hide');
+                            alert(successMsq);
+                        } else {
+                            alert('{{ _('Произошла ошибка') }}');
+                        }
+                    },
+                    error: function (data) {
+                        var o = jQuery.parseJSON(data.responseText);
+                        if (o.message) alert(o.message);
+                    }
+                });
+            }
+
+            $('.x-subscribe').click(function (e) {
+                e.preventDefault();
+
+                var action = 'category_subscribe';
+                var id = $(this).data('category');
+                var successMsq = '{{ _('Подписка оформлена') }}';
+                send_subscription(action, id, successMsq);
+
+            });
+
+            $('.x-unsubscribe').click(function (e) {
+                e.preventDefault();
+
+                var action = 'category_unsubscribe';
+                var id = $(this).data('category');
+                var successMsq = '{{ _('Отписка оформлена') }}';
+                send_subscription(action, id, successMsq);
+
+            });
+
+            {% endif %}
+
+        });
+
+        {% endblock %}
+    </script>
+{% endset %}
+{% do widget.application.addHeadString( script ) %}
+
+{% set style %}
+    <style>
+        {% block style %}
+        code {
+            display: block;
+        }
+
+        {% endblock %}
+    </style>
+{% endset %}
+{% do widget.application.addHeadString( style ) %}

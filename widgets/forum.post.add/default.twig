@@ -1,0 +1,131 @@
+{% block html %}
+
+    {% if not widget.getParam('ajaxCall') %}
+        <a name="{{ widget.getUniqueId() }}-anchor"></a>
+        {{ widget.widgetTitle|raw }}
+        <div id="{{ widget.getUniqueId() }}-wrapper">
+    {% endif %}
+
+    <form action="#{{ widget.getUniqueId() }}-anchor" method="post" data-abide="" novalidate="novalidate"
+          class="x-form">
+
+        {#<div class="row column">{{ widget.statusText }}{{ widget.errorText }}</div>#}
+        {% if widget.statusText %}
+            <div class="row column"><p><span class="label success">{{ widget.statusText }}</span></p></div>
+        {% endif %}
+        {% if widget.errorText %}
+            <div class="row column"><p><span class="label alert">{{ widget.errorText }}</span></p></div>
+        {% endif %}
+
+        {% if widget.showNicknameInput %}
+            <div class="row column">
+                <input name="nickname" type="text" placeholder="{{ _('Представьтесь') }}" required="">
+                <p class="help-text">{{ _('Ваше имя для комментария') }}</p>
+            </div>
+        {% endif %}
+        <div class="row column">
+            <div class="button-group">
+                <a href="#" class="x-tag button" data-tag="link" data-title="{{ _('Введите ссылку') }}"
+                   title="[link]{{ _('Ссылка') }}[/link]">
+                    <i class="fa fa-link" aria-hidden="true"></i>
+                </a>
+                <a href="#" class="x-tag button" data-tag="image" data-title="{{ _('Введите ссылку на изображение') }}"
+                   title="[image]{{ _('Ссылка на изображение') }}[/image]">
+                    <i class="fa fa-picture-o" aria-hidden="true"></i>
+                </a>
+                <a href="#" class="x-tag button" data-tag="quote" data-title="{{ _('Введите цитату') }}"
+                   title="[quote]{{ _('Цитата') }}[/quote]">
+                    <i class="fa fa-quote-right" aria-hidden="true"></i>
+                </a>
+                <a href="#" class="x-tag button" data-tag="code" data-title="{{ _('Введите код') }}"
+                   title="[code]{{ _('Код') }}[/code]">
+                    <i class="fa fa-code" aria-hidden="true"></i>
+                </a>
+            </div>
+            <textarea id="x-form-add-text" name="text" required="" rows="5"
+                      placeholder="{{ _('Текст комментария') }}"></textarea>
+        </div>
+        <div class="row column">
+            <button type="submit" class="button x-submit">{{ widget.getParam('submit_text')|raw }}</button>
+        </div>
+
+        {{ widget.hiddenFields|raw }}
+    </form>
+
+    {% if not widget.getParam('ajaxCall') %}
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+{% set script %}
+    <script>
+        {% block script %}
+        {% if widget.getParam('ajax') and not widget.getParam('ajaxCall') %}
+
+        var new_posts = new Event('new_posts');
+
+        document.addEventListener('DOMContentLoaded', function () {
+            {{ widget.uniqueId|replace({'-':'_'}) }}_hook();
+        });
+        function {{ widget.uniqueId|replace({'-':'_'}) }}_hook() {
+            var form = document.querySelector("#{{ widget.uniqueId }}-wrapper .x-form");
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();
+                var request = new XMLHttpRequest();
+                var body = '{% for name,value in widget.params %}params[{{ name }}]={{ value|url_encode }}&{% endfor %}';
+                var form = document.querySelector("#{{ widget.uniqueId }}-wrapper .x-form");
+                for (var i = 0; i < form.elements.length; i++)
+                    if (form.elements[i].getAttribute('name'))
+                        body += '&' + form.elements[i].getAttribute('name') + '=' + form.elements[i].value;
+                request.open('POST', '{{ widget.getAjaxUrl()|raw }}', true);
+                request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                request.onload = function (e) {
+                    if (request.readyState === 4) {
+                        if (request.status === 200) {
+                            var form = document.querySelector("#{{ widget.uniqueId }}-wrapper .x-form");
+                            var widget = document.querySelector("#{{ widget.uniqueId }}-wrapper");
+                            widget.innerHTML = request.responseText;
+                            form.dispatchEvent(new_posts);
+                            {{ widget.uniqueId|replace({'-':'_'}) }}_hook();
+                        } else {
+                            console.error(request.statusText);
+                        }
+                    }
+                };
+                request.onerror = function (e) {
+                    console.error(request.statusText);
+                };
+                var submit = document.querySelector("#{{ widget.uniqueId }}-wrapper .x-submit");
+                if (submit) {
+                    submit.innerHTML = '{{ _('Отправка') }} ...';
+                    submit.setAttribute('disabled', 1);
+                }
+                request.send(body);
+            });
+        }
+
+        {% endif %}
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            $('.x-tag').click(function (e) {
+                e.preventDefault();
+                var tagTitle = $(this).data('title');
+                var promptText = prompt(tagTitle);
+                if (promptText != null) {
+                    var textToAdd = '[' + $(this).data('tag') + ']' + promptText + '[/' + $(this).data('tag') + ']';
+                    var textArea = $("#x-form-add-text");
+                    var caretPos = textArea[0].selectionStart;
+                    var textAreaText = textArea.val();
+                    textArea.val(textAreaText.substring(0, caretPos) + textToAdd + textAreaText.substring(caretPos));
+                }
+            });
+
+        });
+
+        {% endblock %}
+    </script>
+{% endset %}
+{% do widget.application.addHeadString( script ) %}

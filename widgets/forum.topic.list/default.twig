@@ -1,0 +1,47 @@
+{% block html %}
+
+    <div id="{{ widget.getUniqueId() }}-wrapper">
+
+        {% if widget.children|length %}
+
+            {% block items %}
+
+                <table>
+                    {% for m in widget.children %}
+                        <tr>
+                            <td>
+                                <h5><a href="{{ m.url }}">{{ m.name }}</a></h5>
+                                <span class="text-dark-gray">
+                                    <span class="float-left">{{ m.nickname }}, {{ m.dat|date("d.m.Y H:i") }}</span>
+                                    <span class="float-right">{{ _('Комментарии') }} ({{ m.getPostsCount() }})</span>
+                                </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+
+            {% endblock %}
+
+            {% if widget.getParam('paginator') %}
+                <div class="row column x-pages">
+                    {{ widget.getPaginator()|raw }}
+                </div>
+            {% endif %}
+
+        {% else %}
+
+            <div class="callout">{{ _('Темы отсутствуют') }}.</div>
+
+        {% endif %}
+
+    </div>
+
+    {% if application.user and widget.catalog.id != widget.getParam('forum_catalog') %}
+        {% if widget.getParam('form') %}
+            <div id="{{ widget.getUniqueId() }}-form">
+                {{ widget.getForm()|raw }}
+            </div>
+        {% endif %}
+    {% endif %}
+
+{% endblock %}

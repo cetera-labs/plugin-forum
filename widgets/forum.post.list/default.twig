@@ -1,0 +1,132 @@
+{% block html %}
+
+    {% if not widget.getParam('ajaxCall') %}
+        <div id="{{ widget.getUniqueId() }}-wrapper">
+    {% endif %}
+
+    {% if widget.widgetTitle %}<h3>{{ widget.getWidgetTitle }}</h3>{% endif %}
+
+    <table>
+        {% for m in widget.posts %}
+            <tr>
+                <td class="show-for-medium" style="width:45px">
+                    <div class="thumbnail">
+                        <img src="{{ m.avatar }}" alt="{{ m.nickname }}"
+                             style="background:#bbb;min-width:45px;min-height:45px;">
+                    </div>
+                </td>
+                <td>
+                    <p>{{ widget.processOutput(m.text)|raw|nl2br }}</p>
+                    <div class="float-left">
+                        {{ m.nickname }},
+                        {{ m.dat|date('d.m.Y') }}&nbsp;{{ m.dat|date('H:i') }}
+                    </div>
+                    <div class="float-right button-group small mb0">
+                        <a href="#" class="x-tag-quote button" data-tag="quote" data-topic="11">Цитировать</a>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    {% if widget.getParam('paginator') %}
+        <div class="x-pages">
+            {{ widget.getPaginator()|raw }}
+        </div>
+    {% endif %}
+
+    {% if not widget.getParam('ajaxCall') %}
+        </div>
+        {% if widget.getParam('form') %}
+            <div id="{{ widget.getUniqueId() }}-form">
+                {{ widget.getForm()|raw }}
+            </div>
+        {% endif %}
+    {% endif %}
+
+{% endblock %}
+
+
+{% embed "@widget/_common/ajax-paginator.twig" %}
+    {% block script %}
+        {{ parent() }}
+        {% if widget.getParam('ajax') and not widget.getParam('ajaxCall') %}
+            document.addEventListener('DOMContentLoaded', function () {
+            {{ widget.uniqueId|replace({'-':'_'}) }}_hook_posts();
+            });
+            function {{ widget.uniqueId|replace({'-':'_'}) }}_hook_posts(){
+            var form = document.querySelector("#{{ widget.uniqueId }}-form .x-form");
+            form.addEventListener('new_posts', function () {
+            {{ widget.uniqueId|replace({'-':'_'}) }}_loadpage( {{ widget.uniqueId|replace({'-':'_'}) }}_currentpage );
+            {{ widget.uniqueId|replace({'-':'_'}) }}_hook_posts();
+            });
+            }
+        {% endif %}
+    {% endblock %}
+{% endembed %}
+
+{% set script %}
+    <script>
+        {% block script %}
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            $('.x-tag-quote').click(function (e) {
+                e.preventDefault();
+
+                var postId = $(this).data('post');
+                var topicId = $(this).data('topic');
+                var id = '';
+                var action = '';
+                if (!postId && !topicId)
+                    return false;
+                if (postId) {
+                    id = postId;
+                    action = 'post_get';
+                }
+                if (topicId) {
+                    id = topicId;
+                    action = 'topic_get';
+                }
+
+                $.ajax({
+                    url: '/plugins/forum/ajax.php?action=' + action + '&id=' + id,
+                    dataType: 'json',
+                    tagName: $(this).data('tag'),
+                    success: function (data) {
+                        var postText = data;
+                        var textArea = $("#x-post-add-text");
+                        var caretPos = textArea[0].selectionStart;
+                        var textAreaText = textArea.val();
+                        var textToAdd = '[' + this.tagName + ']' + postText + '[/' + this.tagName + ']';
+                        textArea.val(textAreaText.substring(0, caretPos) + textToAdd + textAreaText.substring(caretPos));
+                        var form = $('#{{ widget.getUniqueId() }}-form');
+                        window.scrollTo(0, form.offset().top);
+                    },
+                    error: function (data) {
+                        var o = jQuery.parseJSON(data.responseText);
+                        if (o.message) alert(o.message);
+                    }
+                });
+
+            });
+
+        });
+
+        {% endblock %}
+    </script>
+{% endset %}
+{% do widget.application.addHeadString( script ) %}
+
+{% set style %}
+    <style>
+        {% block style %}
+        .mb0 {
+            margin-bottom: 0
+        }
+
+        {% endblock %}
+    </style>
+{% endset %}
+{% do widget.application.addHeadString( style ) %}
+

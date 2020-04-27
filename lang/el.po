@@ -1,0 +1,122 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Модуль \"Форум\"\n"
+"POT-Creation-Date: 2017-10-20 11:05+0300\n"
+"PO-Revision-Date: 2017-10-20 11:06+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.2\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: _\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: images\n"
+
+#: widgets/forum.post.add/default.twig:21
+msgid "Ваше имя для комментария"
+msgstr "Το όνομά Τα σχόλια σας"
+
+#: widgets/forum.topic.add/default.twig:12
+msgid "Перейти в созданную тему"
+msgstr "Μετάβαση στην αρχή του θέματος"
+
+#: widgets/forum.topic.list/default.twig:15
+msgid "Комментарии"
+msgstr "Σχόλια"
+
+#: widgets/forum.topic.list/default.twig:32
+msgid "Темы отсутствуют"
+msgstr "Θέματα απουσία"
+
+#: classes/Forum/Plugin.php:46
+msgid "Не указан раздел форума"
+msgstr "Δεν έχει καθοριστεί τμήμα φόρουμ"
+
+#: classes/Forum/Plugin.php:49
+msgid "Указанный раздел не принадлежит форуму"
+msgstr "Καθορισμένο διαμέρισμα δεν ανήκει στο φόρουμ"
+
+#: classes/Forum/Topic.php:76
+msgid "Не задан каталог по умолчанию для комментариев форума"
+msgstr "Δεν έχει οριστεί ο προεπιλεγμένος κατάλογος για τα σχόλια του φόρουμ"
+
+#: classes/Forum/Topic.php:102
+msgid "Отсутствует название темы"
+msgstr "Δεν θέματος τίτλο"
+
+#: classes/Forum/Topic.php:104
+msgid "Отсутствует содержание темы"
+msgstr "Δεν το περιεχόμενο του θέματος"
+
+#: classes/Forum/Topic.php:106
+msgid "Отсутствует раздел темы"
+msgstr "Δεν υπάρχει θέμα για το θέμα"
+
+#: classes/Forum/WidgetCategory.php:35
+msgid "Страница не найдена"
+msgstr "Η σελίδα δεν βρέθηκε"
+
+#: classes/Forum/WidgetPostAdd.php:22 classes/Forum/WidgetPostList.php:37
+msgid "Оцените материал"
+msgstr "Βαθμολογήστε αυτό το άρθρο"
+
+#: classes/Forum/WidgetPostAdd.php:23 classes/Forum/WidgetPostList.php:39
+msgid "Отправить сообщение"
+msgstr "Στείλτε ένα μήνυμα"
+
+#: classes/Forum/WidgetPostAdd.php:24 classes/Forum/WidgetPostList.php:40
+msgid "Ваш комментарий принят"
+msgstr "Το σχόλιό σας λάβει"
+
+#: classes/Forum/WidgetPostAdd.php:100
+msgid "Проверка не пройдена"
+msgstr "Επικύρωση αποτυγχάνει"
+
+#: classes/Forum/WidgetPostList.php:38
+msgid "Добавить комментарий"
+msgstr "Προσθέστε ένα σχόλιο"
+
+#: classes/Forum/WidgetTopicAdd.php:17 classes/Forum/WidgetTopicList.php:30
+#: classes/Forum/WidgetTopicList.php:31
+msgid "Создать тему"
+msgstr "Δημοσίευση Θέματος"
+
+#: classes/Forum/WidgetTopicAdd.php:18 classes/Forum/WidgetTopicList.php:32
+msgid "Тема успешно создана"
+msgstr "Το θέμα έχει δημιουργηθεί με επιτυχία"
+
+#: config.php:57
+msgid "Модераторы форума"
+msgstr "Συντονιστές φόρουμ"
+
+#: install.php:35
+msgid "Форум"
+msgstr "Φόρουμ"
+
+#: install.php:65
+msgid "Комментарии форума"
+msgstr "Φόρουμ Σχόλια"
+
+#: lang/messages.php:2
+msgid "Представьтесь"
+msgstr "Καθιέρωση"
+
+#: lang/messages.php:3
+msgid "Текст комментария"
+msgstr "Το σχόλιό σας"
+
+#: lang/messages.php:4
+msgid "Название темы"
+msgstr "Τίτλος θέματος"
+
+#: lang/messages.php:5
+msgid "Содержание темы"
+msgstr "Θέματα Περιεχόμενα"
+
+#~ msgid "Доступ запрещен"
+#~ msgstr "Δεν επιτρέπεται η πρόσβαση"

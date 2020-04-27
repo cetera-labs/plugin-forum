@@ -1,0 +1,30 @@
+{
+    "name": "cetera-labs/plugin-forum",
+    "description": "Cetera CMS Discussuion Board Plugin",
+    "type": "cetera-cms-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Roman Romanov",
+            "email": "nicodim@mail.ru",
+            "role": "Lead Developer"
+        }
+    ],
+    "require": {
+        "thunderer/shortcode": "^0.6"
+    },
+    
+    "minimum-stability": "dev",
+    
+    "autoload": {
+        "psr-0": { 
+			"Forum\\": "classes/"
+		}
+    },
+
+    "extra": {
+        "name": "forum",
+        "title": "Обсуждения, форумы, комментарии",
+        "description": ""
+    }
+}

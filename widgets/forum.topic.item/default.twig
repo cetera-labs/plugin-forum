@@ -1,0 +1,90 @@
+<div id="{{ widget.uniqueId }}">
+
+    <table>
+        <tr>
+            <td class="show-for-medium" style="width:45px">
+                <div class="thumbnail">
+                    <img src="{{ widget.material.avatar }}" alt="{{ widget.material.nickname }}"
+                         style="background:#bbb;min-width:45px;min-height:45px;">
+                </div>
+            </td>
+            <td>
+                <p>{{ widget.processOutput(widget.material.text)|raw|nl2br }}</p>
+                <div class="float-left">
+                    {{ widget.material.nickname }}
+                    {{ widget.material.dat|date('d.m.Y') }}&nbsp;{{ widget.material.dat|date('H:i') }}
+                </div>
+                <div class="float-right button-group small mb0">
+                    <a href="#" class="x-tag-quote button" data-tag="quote" data-topic="11">Цитировать</a>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    {% block posts %}
+        {% widget 'Forum.Post.List' with { material: widget.material, limit: widget.getParam('posts_limit') } %}
+    {% endblock %}
+
+    {% if application.user %}
+        <hr><br>
+        <h3>{{ _('Подписка на тему') }}</h3>
+        <a href="" class="button x-subscribe{% if widget.hasSubscriber() %} hide{% endif %}"
+           data-topic="{{ widget.material.id }}">{{ _('Подписаться') }}</a>
+        <a href="" class="button x-unsubscribe{% if not widget.hasSubscriber() %} hide{% endif %}"
+           data-topic="{{ widget.material.id }}">{{ _('Отписаться') }}</a>
+    {% endif %}
+
+</div>
+
+{% set script %}
+    <script>
+        {% block script %}
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            function send_subscription(action, id, successMsq) {
+                $.ajax({
+                    url: '/plugins/forum/ajax.php?action=' + action + '&id=' + id,
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data > 0) {
+                            $('.x-subscribe').toggleClass('hide');
+                            $('.x-unsubscribe').toggleClass('hide');
+                            alert(successMsq);
+                        } else {
+                            alert('{{ _('Произошла ошибка') }}');
+                        }
+                    },
+                    error: function (data) {
+                        var o = jQuery.parseJSON(data.responseText);
+                        if (o.message) alert(o.message);
+                    }
+                });
+            }
+
+            $('.x-subscribe').click(function (e) {
+                e.preventDefault();
+
+                var action = 'topic_subscribe';
+                var id = $(this).data('topic');
+                var successMsq = '{{ _('Подписка оформлена') }}';
+                send_subscription(action, id, successMsq);
+
+            });
+
+            $('.x-unsubscribe').click(function (e) {
+                e.preventDefault();
+
+                var action = 'topic_unsubscribe';
+                var id = $(this).data('topic');
+                var successMsq = '{{ _('Отписка оформлена') }}';
+                send_subscription(action, id, successMsq);
+
+            });
+
+        });
+
+        {% endblock %}
+    </script>
+{% endset %}
+{% do widget.application.addHeadString( script ) %}

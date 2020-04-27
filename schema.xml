@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<schema>
+
+<table name="forum_replace" engine="MyISAM">
+    <field name="id" type="mediumint(8)" null="0" auto_increment="1" />
+    <field name="pattern" type="varchar(255)" null="1" />
+    <field name="replacement" type="varchar(255)" null="1" />
+    <field name="idgroup" type="tinyint(4)" null="1" default="0" />
+    <field name="prop" type="tinyint(3) unsigned" null="1" default="0" />
+    <field name="active" type="tinyint(3) unsigned" null="0" default="1" />
+    <field name="name" type="varchar(64)" null="1" />
+    <key name="PRIMARY" unique="1">
+        <column name="id" />
+    </key>
+    <key name="idgroup" unique="0">
+        <column name="idgroup" />
+    </key>
+</table>
+
+<table name="forum_replace_groups" engine="MyISAM">
+    <field name="id" type="tinyint(4)" null="0" auto_increment="1" />
+    <field name="name" type="varchar(64)" null="1" />
+    <field name="active" type="tinyint(3) unsigned" null="0" default="1" />
+    <key name="PRIMARY" unique="1">
+        <column name="id" />
+    </key>
+</table>
+
+<object name="forums" description="Форумы" fixed="1" handler="" plugin="">
+    <field name="tag" type="3" pseudo_type="0" description="Тэг" length="1" show="0" required="1" fixed="1" editor="0" editor_user="" default_value="" />
+    <field name="name" type="1" pseudo_type="0" description="Заголовок" length="99" show="0" required="0" fixed="1" editor="0" editor_user="" default_value="" />
+    <field name="alias" type="1" pseudo_type="0" description="Alias" length="255" show="0" required="1" fixed="1" editor="0" editor_user="" default_value="" />
+    <field name="dat" type="5" pseudo_type="0" description="Дата создания" length="1" show="0" required="1" fixed="1" editor="0" editor_user="" default_value="" />
+    <field name="dat_update" type="5" pseudo_type="0" description="Дата изменения" length="1" show="0" required="1" fixed="1" editor="0" editor_user="" default_value="" />
+    <field name="autor" type="3" pseudo_type="0" description="Автор" length="1" show="0" required="1" fixed="1" editor="0" editor_user="" default_value="" />
+    <field name="type" type="3" pseudo_type="0" description="Свойства" length="1" show="0" required="1" fixed="1" editor="0" editor_user="" default_value="" />
+    <field name="idcat" type="3" pseudo_type="0" description="Раздел" length="1" show="0" required="1" fixed="1" editor="0" editor_user="" default_value="" />
+    <field name="link_cat" type="3" pseudo_type="0" description="Связь с разделом" length="1" show="0" required="0" fixed="0" editor="3" editor_user="" default_value="" />
+    <field name="link_art" type="3" pseudo_type="0" description="Связь с материалом" length="1" show="0" required="0" fixed="0" editor="3" editor_user="" default_value="" />
+    <field name="parent" type="6" pseudo_type="0" description="Ответ на" length="0" show="0" required="0" fixed="0" editor="6" editor_user="" default_value="" />
+    <field name="lastanswer" type="5" pseudo_type="0" description="Дата последнего ответа" length="1" show="0" required="0" fixed="0" editor="5" editor_user="" default_value="" />
+    <field name="username" type="1" pseudo_type="0" description="Пользователь" length="1000" show="1" required="0" fixed="0" editor="1" editor_user="" default_value="" />
+    <field name="email" type="1" pseudo_type="0" description="E-mail" length="1000" show="1" required="0" fixed="0" editor="1" editor_user="" default_value="" />
+    <field name="ip" type="3" pseudo_type="0" description="IP" length="1" show="0" required="0" fixed="0" editor="3" editor_user="" default_value="" />
+    <field name="closed" type="9" pseudo_type="0" description="Закрытая ветка" length="1" show="1" required="0" fixed="0" editor="9" editor_user="" default_value="" />
+    <field name="last_post" type="6" pseudo_type="0" description="Последний ответ" length="0" show="0" required="0" fixed="0" editor="6" editor_user="" default_value="" />
+    <field name="answers" type="3" pseudo_type="0" description="Всего ответов" length="1" show="0" required="0" fixed="0" editor="3" editor_user="" default_value="" />
+    <field name="thread" type="3" pseudo_type="0" description="Основная тема" length="1" show="0" required="0" fixed="0" editor="3" editor_user="" default_value="" />
+    <field name="text" type="1" pseudo_type="0" description="Текст" length="32767" show="1" required="0" fixed="0" editor="15" editor_user="" default_value="" />
+</object>
+
+
+</schema>

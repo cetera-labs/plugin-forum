@@ -1,0 +1,122 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Модуль \"Форум\"\n"
+"POT-Creation-Date: 2017-10-20 11:03+0300\n"
+"PO-Revision-Date: 2017-10-20 11:05+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.2\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: _\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: images\n"
+
+#: widgets/forum.post.add/default.twig:21
+msgid "Ваше имя для комментария"
+msgstr "Your name"
+
+#: widgets/forum.topic.add/default.twig:12
+msgid "Перейти в созданную тему"
+msgstr "Go to created topic"
+
+#: widgets/forum.topic.list/default.twig:15
+msgid "Комментарии"
+msgstr "Comments"
+
+#: widgets/forum.topic.list/default.twig:32
+msgid "Темы отсутствуют"
+msgstr "No topics"
+
+#: classes/Forum/Plugin.php:46
+msgid "Не указан раздел форума"
+msgstr "Not specified forum section"
+
+#: classes/Forum/Plugin.php:49
+msgid "Указанный раздел не принадлежит форуму"
+msgstr "The specified section does not belong to the forum"
+
+#: classes/Forum/Topic.php:76
+msgid "Не задан каталог по умолчанию для комментариев форума"
+msgstr "The default directory for forum comments is not set"
+
+#: classes/Forum/Topic.php:102
+msgid "Отсутствует название темы"
+msgstr "Missing topic name"
+
+#: classes/Forum/Topic.php:104
+msgid "Отсутствует содержание темы"
+msgstr "Missing topic content"
+
+#: classes/Forum/Topic.php:106
+msgid "Отсутствует раздел темы"
+msgstr "Topic section missing"
+
+#: classes/Forum/WidgetCategory.php:35
+msgid "Страница не найдена"
+msgstr "Page not found"
+
+#: classes/Forum/WidgetPostAdd.php:22 classes/Forum/WidgetPostList.php:37
+msgid "Оцените материал"
+msgstr "Rate article"
+
+#: classes/Forum/WidgetPostAdd.php:23 classes/Forum/WidgetPostList.php:39
+msgid "Отправить сообщение"
+msgstr "Post message"
+
+#: classes/Forum/WidgetPostAdd.php:24 classes/Forum/WidgetPostList.php:40
+msgid "Ваш комментарий принят"
+msgstr "Thanks for comment"
+
+#: classes/Forum/WidgetPostAdd.php:100
+msgid "Проверка не пройдена"
+msgstr "Captcha failed"
+
+#: classes/Forum/WidgetPostList.php:38
+msgid "Добавить комментарий"
+msgstr "Add comment"
+
+#: classes/Forum/WidgetTopicAdd.php:17 classes/Forum/WidgetTopicList.php:30
+#: classes/Forum/WidgetTopicList.php:31
+msgid "Создать тему"
+msgstr "Create topic"
+
+#: classes/Forum/WidgetTopicAdd.php:18 classes/Forum/WidgetTopicList.php:32
+msgid "Тема успешно создана"
+msgstr "Topic successfully created"
+
+#: config.php:57
+msgid "Модераторы форума"
+msgstr "Forum moderators"
+
+#: install.php:35
+msgid "Форум"
+msgstr "Forum"
+
+#: install.php:65
+msgid "Комментарии форума"
+msgstr "Forum comments"
+
+#: lang/messages.php:2
+msgid "Представьтесь"
+msgstr "Your name"
+
+#: lang/messages.php:3
+msgid "Текст комментария"
+msgstr "Text"
+
+#: lang/messages.php:4
+msgid "Название темы"
+msgstr "Topic name"
+
+#: lang/messages.php:5
+msgid "Содержание темы"
+msgstr "Topic content"
+
+#~ msgid "Доступ запрещен"
+#~ msgstr "Access is denied"

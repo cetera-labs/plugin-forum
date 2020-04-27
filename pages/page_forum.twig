@@ -1,0 +1,7 @@
+{% extends layout %}
+
+{% block main %}
+
+    {% widget 'Forum.Category' with { css_class: 'content', forum_catalog: catalog.path.2, list_limit: 10 } %}
+
+{% endblock %}
