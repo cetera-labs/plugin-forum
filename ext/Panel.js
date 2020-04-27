@@ -25,6 +25,8 @@ Ext.define('Plugin.forum.Panel', {
     ],
     
     initComponent : function() {
+		
+		this.treeContainer = mainTree.up('tabpanel');
    
         this.store = Ext.create('Ext.data.JsonStore', {
             autoDestroy: true,
@@ -152,7 +154,7 @@ Ext.define('Plugin.forum.Panel', {
         this.on({
             'beforedestroy': function() {
                 mainTree.getSelectionModel().removeListener('selectionchange', this.catalogChanged, this);
-                treeContainer.remove(this.forums);
+                this.treeContainer.remove(this.forums);
                 if (this.replaceWin) this.replaceWin.close();
                 if (this.propertiesWin) this.propertiesWin.close();
                 this.replaceWin = false;
@@ -162,13 +164,13 @@ Ext.define('Plugin.forum.Panel', {
                 this.edit(0,this.getSelectionModel().getSelection()[0].getId());
             },
             'activate' : function() {
-                treeContainer.get(0).hide();
+                this.treeContainer.get(0).hide();
                 this.forums.show();
                 
             },
             'deactivate' : function() {
                 this.forums.hide();
-                treeContainer.get(0).show();
+                this.treeContainer.get(0).show();
             },
             scope: this
         });

@@ -26,7 +26,7 @@ if ($this->getBo()&& $this->getUser() && ($this->getUser()->hasRight(GROUP_MODER
   			'id'	     => 'forums',
   			'position' => MENU_SITE,
         'name' 	   => $translator->_('Форумы'),
-        'icon'     => '/cms/plugins/forum/icon.gif',
+        'icon'     => '/cms/plugins/forum/images/icon.gif',
         'class'    => 'Plugin.forum.Panel'
 		));
     
