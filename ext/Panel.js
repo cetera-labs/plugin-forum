@@ -201,7 +201,7 @@ Ext.define('Plugin.forum.Panel', {
                     },
                     scope: this
                 },'-',{
-                    icon: '/plugins/forum/images/replace_icon.gif',
+                    icon: '/cms/plugins/forum/images/replace_icon.gif',
                     tooltip:_('Автозамена'),
                     handler: function () { 
                         if (!this.replaceWin)
