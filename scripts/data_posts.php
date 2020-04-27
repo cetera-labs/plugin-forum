@@ -28,15 +28,12 @@ try {
     $right[1] = $user->allowCat(PERM_CAT_ALL_MAT, $m_id); // Работа с материалами других авторов
     
     // Вычисляем каков тип у материалов
-    $r = fssql_query("SELECT A.alias,A.id FROM types A, dir_data B where (A.id = B.typ)and(B.id = $m_id)");
-    if (!mysql_num_rows($r)) die('[]');
-    $f = mysql_fetch_row($r);
+    $f = $application->getDbConnection()->fetchArray("SELECT A.alias,A.id FROM types A, dir_data B where (A.id = B.typ)and(B.id = $m_id)");
     $math = $f[0];
     $type = $f[1];
         
     $sql_all = "select COUNT(A.id) from $math A where (A.name like '$m_filter' or A.text like '$m_filter')and(A.idcat=$m_id) and (A.parent=".(int)$parent.")";
-    $r  = fssql_query($sql_all);
-    $f = mysql_fetch_array($r);
+    $f = $application->getDbConnection()->fetchArray($sql_all);
     $all_filter = $f[0];
     
     $sql = "SELECT A.id, A.type, A.autor as autor_id, username, ip, closed, answers,
@@ -47,11 +44,11 @@ try {
                          WHERE (A.name like '$m_filter' or A.text like '$m_filter') and (A.idcat=$m_id) and (A.parent=".(int)$parent.")
                          ORDER BY $sort $order
                          LIMIT $m_first,$math_at_once";	
-    $r  = fssql_query($sql);
+    $r  = $application->getDbConnection()->query($sql);
     
     $materials = array();
     
-    while ($f = mysql_fetch_assoc($r)) {
+    while ($f = $r->fetch()) {
 
       $materials[] = array(
         'id'       => $f['id'],
@@ -81,4 +78,3 @@ try {
     ));
 
 }
-?>

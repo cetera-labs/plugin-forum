@@ -7,8 +7,8 @@ $nodes = array();
 
 if ($node == 'root') {
 
-    $r  = fssql_query("SELECT id, name, active from forum_replace_groups ORDER BY name");
-    while ($f = mysql_fetch_assoc($r)) {
+	$r  = $application->getDbConnection()->query("SELECT id, name, active from forum_replace_groups ORDER BY name");
+    while ($f = $r->fetch()) {
         $nodes[] = array(
             'text' => $f['name'],
             'id'   => isset($_REQUEST['store'])?$f['id']:'group-'.$f['id'],
@@ -20,8 +20,8 @@ if ($node == 'root') {
 } else {
 
     $data = explode('-',$node);
-    $r = fssql_query("SELECT id, name, active from forum_replace where idgroup=".(int)$data[1]." ORDER BY name");
-    while ($f = mysql_fetch_assoc($r)) {
+	$r  = $application->getDbConnection()->query("SELECT id, name, active from forum_replace where idgroup=".(int)$data[1]." ORDER BY name");
+    while ($f = $r->fetch()) {
         $nodes[] = array(
             'text' => $f['name'],
             'id'   => 'item-'.$f['id'],

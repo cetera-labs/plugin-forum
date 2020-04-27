@@ -77,26 +77,25 @@ if ($action == 'get_forum') {
         'permissions' => array()
     );
     foreach ($forum_permissions as $pid => $name) {
-        $r = fssql_query('SELECT group_id FROM users_groups_allow_cat WHERE permission='.$pid.' and catalog_id='.$id);
+		$r = $application->getDbConnection()->fetchAll('SELECT group_id FROM users_groups_allow_cat WHERE permission=? and catalog_id=?', [$pid,$id]);
         $res['data']['permissions'][$pid] = array();
-        while ($perm = mysql_fetch_assoc($r)) $res['data']['permissions'][$pid][] = (int)$perm['group_id'];
+        foreach ($r as $perm) $res['data']['permissions'][$pid][] = (int)$perm['group_id'];
     }
     $res['success'] = true;
 }
 
 if ($action == 'replace_get_replace') {
-    $r = fssql_query('SELECT * FROM forum_replace WHERE id='.(int)$id);
-    $res['data'] = mysql_fetch_assoc($r);
+    $res['data'] = $application->getDbConnection()->fetchAssoc('SELECT * FROM forum_replace WHERE id=?',[(int)$id]);
     $res['success'] = true;
 }
 
 if ($action == 'replace_delete') {
     list($item, $id) = explode('-', $_POST['node']);
     if ($item == 'group') {
-        fssql_query("delete from forum_replace_groups where id=".(int)$id);
-        fssql_query("delete from forum_replace where idgroup=".(int)$id);
+        $application->getDbConnection()->executeQuery("delete from forum_replace_groups where id=".(int)$id);
+        $application->getDbConnection()->executeQuery("delete from forum_replace where idgroup=".(int)$id);
     } else {
-        fssql_query("delete from forum_replace where id=".(int)$id);
+        $application->getDbConnection()->executeQuery("delete from forum_replace where id=".(int)$id);
     }
     $res['success'] = true;
 }
@@ -110,9 +109,9 @@ if ($action == 'replace_save') {
     $group   = (integer) $_POST['idgroup'];
     $active  = (integer) $_POST['active'];
     if ($id) {
-        fssql_query("update forum_replace set name='$name', pattern='$pattern', replacement='$replace', prop=$prop, idgroup=$group, active=$active where id=$id");
+        $application->getDbConnection()->executeQuery("update forum_replace set name='$name', pattern='$pattern', replacement='$replace', prop=$prop, idgroup=$group, active=$active where id=$id");
     } else {
-  	    fssql_query("insert into forum_replace set name='$name', pattern='$pattern', replacement='$replace', prop=$prop, idgroup=$group, active=$active");
+  	    $application->getDbConnection()->executeQuery("insert into forum_replace set name='$name', pattern='$pattern', replacement='$replace', prop=$prop, idgroup=$group, active=$active");
     }
     $res['success'] = true;
 }
@@ -121,15 +120,15 @@ if ($action == 'replace_disable' || $action == 'replace_enable') {
     list($item, $id) = explode('-', $_POST['node']);
     if ($item == 'group') $table = 'forum_replace_groups'; else $table = 'forum_replace';
     if ($action == 'replace_disable') $active = 0; else $active = 1;
-    fssql_query('UPDATE '.$table.' SET active='.$active.' WHERE id='.$id);
+    $application->getDbConnection()->executeQuery('UPDATE '.$table.' SET active='.$active.' WHERE id='.$id);
     $res['success'] = true;
 }
 
 if ($action == 'new_replace_group') {
   if ($id) {
-    fssql_query('update forum_replace_groups set name="'.mysql_escape_string($_POST['name']).'" where id='.$id);
+    $application->getDbConnection()->executeQuery('update forum_replace_groups set name="'.$_POST['name'].'" where id='.$id);
   } else {
-    fssql_query('insert into forum_replace_groups set name="'.mysql_escape_string($_POST['name']).'"');
+    $application->getDbConnection()->executeQuery('insert into forum_replace_groups set name="'.$_POST['name'].'"');
   }
   $res['success'] = true;
 }
@@ -141,14 +140,10 @@ if ($action == 'permissions') {
     $right[2] = $user->allowCat(PERM_CAT_MAT_PUB, $id); // Публикация материалов
 
     $right[3] = '';
-    $r = fssql_query('SELECT preview, typ FROM dir_data WHERE id='.(int)$id);
-    if ($r && mysql_num_rows($r))
-        list($right[3], $right[4]) = mysql_fetch_array($r);
+    list($right[3], $right[4]) = $application->getDbConnection()->fetchArray('SELECT preview, typ FROM dir_data WHERE id=?',[(int)$id]);
 
-    if ($r) {
-        $res['success'] = true;
-        $res['right']   = $right;
-    }
+    $res['success'] = true;
+       $res['right']   = $right;
 }
 
 if ($action == 'delete' && is_array($sel)) {
@@ -167,14 +162,6 @@ if (($action == 'pub' || $action == 'unpub' || $action == 'move' || $action == '
     $cats = "A.idcat=$id";
 
     $where = '';
-	
-    $r = fssql_query("select handler from types where alias = '".$catalog->materialsTable."'");
-    if ($r && mysql_num_rows($r)) {
-        $handler = mysql_result($r,0);
-        if (substr($handler, -4) != '.php') $handler .= '.php';
-        if ($handler && file_exists(PLUGIN_MATH_DIR.'/'.$handler)) 
-            include(PLUGIN_MATH_DIR.'/'.$handler);
-    }
 	
     foreach($sel as $val) {
 	  
@@ -204,11 +191,11 @@ if (($action == 'pub' || $action == 'unpub' || $action == 'move' || $action == '
 	  $stat = "update ".$catalog->materialsTable." set closed=0";
 	}	
 	if ($action == 'move') {
-	  $r = fssql_query("SELECT MAX(tag) FROM ".$catalog->materialsTable." WHERE idcat=".$_POST['cat']);
-	  $tt = mysql_result($r,0) + 1;	
+	  $r = $application->getDbConnection()->fetchColumn("SELECT MAX(tag) FROM ".$catalog->materialsTable." WHERE idcat=".$_POST['cat'],[],0);
+	  $tt = $r + 1;	
 	  $stat = "update ".$catalog->materialsTable." set idcat=".$_POST['cat'].", tag=$tt";
 	}
-    if ($stat) fssql_query("$stat where ($where)");
+    if ($stat) $application->getDbConnection()->executeQuery("$stat where ($where)");
     
     $res['success'] = true;
 }
