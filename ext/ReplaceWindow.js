@@ -27,6 +27,8 @@ Ext.define('Plugin.forum.ReplaceWindow', {
         
         this.buildEditWindow();
         this.editForm.getForm().findField('idgroup').getStore().load();
+		
+		this.callParent();
     },
     
     onDestroy : function(){

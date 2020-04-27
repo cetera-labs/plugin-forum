@@ -200,7 +200,7 @@ Ext.define('Plugin.forum.PropertiesWindow', {
             handler: function(){ this.hide(); }
         }];
     
-        ForumsPropertiesWindow.superclass.initComponent.call(this);
+        this.callParent();
     },
     
     show : function(id) {
