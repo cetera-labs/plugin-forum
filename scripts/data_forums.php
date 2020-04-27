@@ -1,6 +1,5 @@
 <?php
 include_once('common_bo.php');
-include('common_forums.php');
 
 if (!$user->allowAdmin())  throw new Exception_CMS(Exception_CMS::NO_RIGHTS);
 

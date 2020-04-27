@@ -11,8 +11,6 @@
  **/
   
 include_once('common_bo.php');
-include('common_forums.php');
-include_once('ForumPost.php');
 
 $res = array(
     'success' => false,
@@ -156,7 +154,7 @@ if ($action == 'permissions') {
 if ($action == 'delete' && is_array($sel)) {
     $catalog = Catalog::getById($id);
 	foreach ($sel as $val) {
-	   $m = ForumPost::getById($val, $catalog->materialsType, $catalog->materialsTable);
+	   $m = \Forum\Post::getById($val, $catalog->materialsType, $catalog->materialsTable);
        $m->delete();
     }
 	$res['success'] = true;

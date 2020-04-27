@@ -162,13 +162,13 @@ Ext.define('Plugin.forum.Panel', {
                 this.edit(0,this.getSelectionModel().getSelection()[0].getId());
             },
             'activate' : function() {
-                this.treeContainer.get(0).hide();
+                //this.treeContainer.get(0).hide();
                 this.forums.show();
                 
             },
             'deactivate' : function() {
                 this.forums.hide();
-                this.treeContainer.get(0).show();
+                //this.treeContainer.get(0).show();
             },
             scope: this
         });
