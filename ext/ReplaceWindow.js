@@ -63,7 +63,7 @@ Ext.define('Plugin.forum.ReplaceWindow', {
                     }
                 });
             };
-        }, this, false, this.tree.getSelectionModel().getSelectedNode().text);
+        }, this, false, this.tree.getSelectionModel().getLastSelected().text);
     },
     
     change: function(action) {
@@ -71,7 +71,7 @@ Ext.define('Plugin.forum.ReplaceWindow', {
             url: '/plugins/forum/scripts/action_forums.php',
             params: { 
                 action: action, 
-                node: this.tree.getSelectionModel().getSelectedNode().id
+                node: this.tree.getSelectionModel().getLastSelected().getId()
             },
             scope: this,
             success: function(resp) {
@@ -82,19 +82,24 @@ Ext.define('Plugin.forum.ReplaceWindow', {
     
     reload: function(root) {
         if (root)
-            this.tree.loader.load(this.tree.root);
+            this.tree.getStore().reload({
+				node: this.tree.getStore().getNodeById('root')
+			});
             else {
-                var node = this.tree.getSelectionModel().getSelectedNode().parentNode;
-                this.tree.loader.load(node, function() {
-                    node.expand();
-                }, this);
+                var node = this.tree.getSelectionModel().getLastSelected().parentNode;
+				this.tree.getStore().reload({
+					node: node,
+					callback: function() {
+						node.expand();
+					}
+				});
             }
     },
     
     splitSelected: function() {
-        var sn = this.tree.getSelectionModel().getSelectedNode();
+        var sn = this.tree.getSelectionModel().getLastSelected();
         if (!sn) return false;
-        return sn.id.split('-');
+        return sn.getId().split('-');
     },
     
     isSelectedGroup: function() {
@@ -104,15 +109,15 @@ Ext.define('Plugin.forum.ReplaceWindow', {
     
     getSelectedGroup: function() {
         if (this.isSelectedGroup()) {
-            return this.tree.getSelectionModel().getSelectedNode();
+            return this.tree.getSelectionModel().getLastSelected();
         } else {
-            return this.tree.getSelectionModel().getSelectedNode().parentNode;
+            return this.tree.getSelectionModel().getLastSelected().parentNode;
         }
     },
     
     getSelectedGroupId: function() {
         var sn = this.getSelectedGroup();
-        var a = sn.id.split('-');
+        var a = sn.getId().split('-');
         return a[1];
     },
     
@@ -144,17 +149,17 @@ Ext.define('Plugin.forum.ReplaceWindow', {
     newClick: function() {
         this.editId = 0;
         var win = this.buildEditWindow();
+		
         win.setTitle(_('Новая автозамена'));
         this.editForm.getForm().reset();
+		
         this.editForm.getForm().findField('prop').setValue(0);
-        
         this.editForm.getForm().findField('idgroup').getStore().load({
             scope: this,
             callback: function() {
                 this.editForm.getForm().findField('idgroup').setValue(this.getSelectedGroupId());
             },
         });
-        
         win.show();
     },
     
@@ -162,11 +167,13 @@ Ext.define('Plugin.forum.ReplaceWindow', {
         if (!this.editWindow) {
             this.editForm = new Ext.form.FormPanel({
                 baseCls: 'x-plain',
-                labelWidth: 150,
                 defaultType: 'textfield',
                 method: 'POST',
                 url: '/plugins/forum/scripts/action_forums.php',
-                defaults : { anchor: '0' },
+                defaults : { 
+					anchor: '0',
+					labelWidth: 150,
+				},
                 bodyStyle: 'margin:10px;',
                 items: [{
                     fieldLabel: _('Имя'),
@@ -174,12 +181,19 @@ Ext.define('Plugin.forum.ReplaceWindow', {
                     name: 'name'
                 }, new Ext.form.ComboBox({
                     fieldLabel: _('Группа'),
+					labelWidth: 150,
                     name:'idgroup',
                     allowBlank: false,
                     store: new Ext.data.JsonStore({
                         fields: ['id', 'text'],
-                        root: 'rows',
-                        url: '/plugins/forum/scripts/data_replace.php?store=1&node=root'
+						proxy: {
+							type: 'ajax',
+							url: '/plugins/forum/scripts/data_replace.php?store=1&node=root',
+							reader: {
+								root: 'rows',
+								idProperty: 'id'
+							}
+						} 						
                     }),
                     valueField:'id',
                     displayField:'text',
@@ -194,6 +208,7 @@ Ext.define('Plugin.forum.ReplaceWindow', {
                     name: 'replacement'
                 }, new Ext.form.ComboBox({
                     fieldLabel: _('Способ замены'),
+					labelWidth: 150,
                     name:'prop',
                     allowBlank: false,
                     store: new Ext.data.SimpleStore({
@@ -214,8 +229,8 @@ Ext.define('Plugin.forum.ReplaceWindow', {
             });
             
             this.editWindow = new Ext.Window({
-                width: 500,
-                height:240,
+                width: 550,
+                height:250,
                 plain:true,
                 closeAction: 'hide',
                 items: this.editForm,
@@ -254,10 +269,15 @@ Ext.define('Plugin.forum.ReplaceWindow', {
             useArrows: true,
             border: false,
             rootVisible: false,
-            dataUrl: '/plugins/forum/scripts/data_replace.php',
+			store: {
+				proxy: {
+					type: 'ajax',
+					url: '/plugins/forum/scripts/data_replace.php',
+				},
+				root: {id: 'root'}
+			},
             containerScroll: true,
             autoScroll: true,
-            root: {id: 'root'},
             tbar: [
                 {
                     id: 'tb_replace_new_group',

@@ -11,6 +11,7 @@
  **/
   
 include_once('common_bo.php');
+include_once(__DIR__.'/common.php');
 
 $res = array(
     'success' => false,

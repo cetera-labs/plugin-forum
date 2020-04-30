@@ -292,19 +292,18 @@ Ext.define('Plugin.forum.Panel', {
                    
     edit: function(idcat, id) {
     
-        if (!this.editWindow) {
-            this.editWindow = Ext.create('Cetera.window.MaterialEdit', { 
-                listeners: {
-                    hide: {
-                        fn: function(win){
-                            win.remove(win.content, true);
-                            this.store.load();
-                        },
-                        scope: this
-                    }
-                }
-            });
-        }
+		if (this.editWindow) this.editWindow.destroy();
+		this.editWindow = Ext.create('Cetera.window.MaterialEdit', { 
+			listeners: {
+				hide: {
+					fn: function(win){
+						win.remove(win.content, true);
+						this.store.load();
+					},
+					scope: this
+				}
+			}
+		});
         
         var mat_type = this.mat_type;
         var win = this.editWindow;
@@ -388,8 +387,8 @@ Ext.define('Plugin.forum.Panel', {
     showAnswers: function() {
         var sel = this.getSelectionModel().getSelection()[0];
         var idx = this.path.length;
-        var but = this.breadCrumb.addButton({
-            text: '> ' + sel.getComponent('name'),
+        var but = this.breadCrumb.add({
+            text: '> ' + sel.get('name'),
             handler: function() { this.back(idx); },
             scope: this
         });
@@ -397,7 +396,7 @@ Ext.define('Plugin.forum.Panel', {
             button: but,
             id: this.store.proxy.extraParams.parent
         };
-        this.store.proxy.extraParams.parent = sel.id;
+        this.store.proxy.extraParams.parent = sel.getId();
         if (idx == 0) this.breadCrumb.show();
         this.doLayout();
         this.reload();
