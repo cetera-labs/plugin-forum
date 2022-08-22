@@ -1,6 +1,6 @@
 {
     "name": "cetera-labs/plugin-forum",
-    "description": "Cetera CMS Discussuion Board Plugin",
+    "description": "Fastsite CMS Discussuion Board Plugin",
     "type": "cetera-cms-plugin",
     "license": "MIT",
     "authors": [
