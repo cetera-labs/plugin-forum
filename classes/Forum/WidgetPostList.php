@@ -39,9 +39,9 @@ class WidgetPostList extends \Cetera\Widget\Templateable
             'form_title' => '<h3>' . $this->t->_('Добавить комментарий') . '</h3>',
             'form_submit_text' => $this->t->_('Отправить сообщение'),
             'form_success_text' => $this->t->_('Ваш комментарий принят'),
-            'form_recaptcha' => false,
-            'form_recaptcha_site_key' => null,
-            'form_recaptcha_secret_key' => null,
+            'form_recaptcha' => true,
+            'form_recaptcha_site_key' => '6Lc1s6chAAAAALkS7zwksn9sHjkheBnEi4EwOaEB',
+            'form_recaptcha_secret_key' => '6Lc1s6chAAAAAME4Oj0TfPbFf6Ja7DOf2E3ypmbo',
         );
     }
 
