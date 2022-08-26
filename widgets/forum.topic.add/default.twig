@@ -1,81 +1,91 @@
 {% block html %}
 
-    <a name="{{ widget.getUniqueId() }}-anchor"></a>
-    {{ widget.widgetTitle|raw }}
-    <div id="{{ widget.getUniqueId() }}-wrapper">
+<a name="{{ widget.getUniqueId() }}-anchor"></a>
+{{ widget.widgetTitle|raw }}
+<div id="{{ widget.getUniqueId() }}-wrapper">
 
-        <form action="" method="post" data-abide="" novalidate="novalidate" class="x-form">
+    <form id="addtopic_form" action="" method="post" data-abide="" novalidate="novalidate" class="x-form">
+        <input type="hidden" id="gRecaptchaResponse" name="gRecaptchaResponse">
 
-            {% if widget.statusText %}
-                <div class="row column"><p><span class="label success">{{ widget.statusText }}</span>
-                {% if widget.addedTopic is defined and widget.addedTopic %}
-                    <a class="text-success"
-                       href="{{ widget.addedTopic.url }}">{{ _('Перейти в созданную тему') }}</a></p></div>
-                {% endif %}
+        {% if widget.statusText %}
+            <div class="row column"><p><span class="label success">{{ widget.statusText }}</span>
+            {% if widget.addedTopic is defined and widget.addedTopic %}
+                <a class="text-success" href="{{ widget.addedTopic.url }}">{{ _('Перейти в созданную тему') }}</a></p></div>
             {% endif %}
-            {% if widget.errorText %}
-                <div class="row column"><p><span class="label alert">{{ widget.errorText }}</span></p></div>
-            {% endif %}
+        {% endif %}
+        {% if widget.errorText %}
+            <div class="row column"><p><span class="label alert">{{ widget.errorText }}</span></p></div>
+        {% endif %}
 
-            <div class="row column">
-                <input name="name" type="text" placeholder="{{ _('Название темы') }}" required="">
+        <div class="row column">
+            <input name="name" type="text" placeholder="{{ _('Название темы') }}" required="">
+        </div>
+        <div class="row column">
+            <div class="button-group">
+                <a href="#" class="x-tag button" data-tag="link" data-title="{{ _('Введите ссылку') }}" title="[link]{{ _('Ссылка') }}[/link]">
+                    <i class="fa fa-link" aria-hidden="true"></i>
+                </a>
+                <a href="#" class="x-tag button" data-tag="image" data-title="{{ _('Введите ссылку на изображение') }}" title="[image]{{ _('Ссылка на изображение') }}[/image]">
+                    <i class="fa fa-picture-o" aria-hidden="true"></i>
+                </a>
+                <a href="#" class="x-tag button" data-tag="quote" data-title="{{ _('Введите цитату') }}" title="[quote]{{ _('Цитата') }}[/quote]">
+                    <i class="fa fa-quote-right" aria-hidden="true"></i>
+                </a>
+                <a href="#" class="x-tag button" data-tag="code" data-title="{{ _('Введите код') }}" title="[code]{{ _('Код') }}[/code]">
+                    <i class="fa fa-code" aria-hidden="true"></i>
+                </a>
             </div>
-            <div class="row column">
-                <div class="button-group">
-                    <a href="#" class="x-tag button" data-tag="link" data-title="{{ _('Введите ссылку') }}"
-                       title="[link]{{ _('Ссылка') }}[/link]">
-                        <i class="fa fa-link" aria-hidden="true"></i>
-                    </a>
-                    <a href="#" class="x-tag button" data-tag="image"
-                       data-title="{{ _('Введите ссылку на изображение') }}"
-                       title="[image]{{ _('Ссылка на изображение') }}[/image]">
-                        <i class="fa fa-picture-o" aria-hidden="true"></i>
-                    </a>
-                    <a href="#" class="x-tag button" data-tag="quote" data-title="{{ _('Введите цитату') }}"
-                       title="[quote]{{ _('Цитата') }}[/quote]">
-                        <i class="fa fa-quote-right" aria-hidden="true"></i>
-                    </a>
-                    <a href="#" class="x-tag button" data-tag="code" data-title="{{ _('Введите код') }}"
-                       title="[code]{{ _('Код') }}[/code]">
-                        <i class="fa fa-code" aria-hidden="true"></i>
-                    </a>
-                </div>
-                <textarea id="x-form-add-text" name="text" required="" rows="5"
-                          placeholder="{{ _('Содержание темы') }}"></textarea>
-            </div>
-            <div class="row column">
-                <button type="submit" class="button x-submit">{{ widget.getParam('submit_text')|raw }}</button>
-            </div>
+            <textarea id="x-form-add-text" name="text" required="" rows="5" placeholder="{{ _('Содержание темы') }}"></textarea>
+        </div>
+        <div class="row column">
+            <button type="submit" class="button x-submit">{{ widget.getParam('submit_text')|raw }}</button>
+        </div>
 
-            {{ widget.hiddenFields|raw }}
-        </form>
+        {{ widget.hiddenFields|raw }}
+    </form>
 
-    </div>
+</div>
 
 {% endblock %}
 
 {% set script %}
     <script>
-        {% block script %}
+    {% block script %}
 
-        document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function () {
 
-            $('.x-tag').click(function (e) {
-                e.preventDefault();
-                var tagTitle = $(this).data('title');
-                var promptText = prompt(tagTitle);
-                if (promptText != null) {
-                    var textToAdd = '[' + $(this).data('tag') + ']' + promptText + '[/' + $(this).data('tag') + ']';
-                    var textArea = $("#x-form-add-text");
-                    var caretPos = textArea[0].selectionStart;
-                    var textAreaText = textArea.val();
-                    textArea.val(textAreaText.substring(0, caretPos) + textToAdd + textAreaText.substring(caretPos));
-                }
-            });
+      $('.x-tag').click(function(e) {
+        e.preventDefault();
+        var tagTitle = $(this).data('title');
+        var promptText = prompt(tagTitle);
+        if (promptText != null) {
+          var textToAdd = '['+$(this).data('tag')+']'+promptText+'[/'+$(this).data('tag')+']';
+          var textArea = $("#x-form-add-text");
+          var caretPos = textArea[0].selectionStart;
+          var textAreaText = textArea.val();
+          textArea.val( textAreaText.substring(0, caretPos) + textToAdd + textAreaText.substring(caretPos) );
+        }
+      });
 
+        {% if widget.getParam('recaptcha_use') %}
+        addtopic_form.addEventListener('submit', event => {
+            event.preventDefault()
+            getRecaptchaToken(addtopic_form)
         });
+        function getRecaptchaToken(form) {
+            grecaptcha.ready(function() {
+                grecaptcha.execute('{{  widget.getParam('recaptcha_site_key') }}', {action: 'addTopic'}).then(function(token) {
+                    console.log(token);
+                    gRecaptchaResponse.value = token
+                    form.submit()
+                });
+            });
+        }
+        {% endif %}
 
-        {% endblock %}
+    });
+
+    {% endblock %}
     </script>
 {% endset %}
 {% do widget.application.addHeadString( script ) %}

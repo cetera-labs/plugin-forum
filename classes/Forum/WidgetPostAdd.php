@@ -25,9 +25,9 @@ class WidgetPostAdd extends \Cetera\Widget\Templateable
             'success_text' => $this->t->_('Ваш комментарий принят'),
             'template' => 'default.twig',
 
-            'recaptcha' => false,
-            'recaptcha_site_key' => null,
-            'recaptcha_secret_key' => null,
+            'recaptcha_use' => $this->getParam('recaptcha_use'),
+            'recaptcha_site_key' => $this->getParam('recaptcha_site_key'),
+            'recaptcha_secret_key' => $this->getParam('recaptcha_secret_key'),
 
             'forum_catalog' => 0,
             'posts_catalog' => 0,
@@ -51,13 +51,13 @@ class WidgetPostAdd extends \Cetera\Widget\Templateable
 
     public function showRecaptcha()
     {
-        return $this->getParam('recaptcha') && !$this->getParam('ajax') && $this->getParam('recaptcha_site_key') && $this->getParam('recaptcha_secret_key');
+        return $this->getParam('recaptcha_use') && !$this->getParam('ajax') && $this->getParam('recaptcha_site_key') && $this->getParam('recaptcha_secret_key');
     }
 
     protected function init()
     {
         if ($this->showRecaptcha()) {
-            $this->application->addScript('https://www.google.com/recaptcha/api.js');
+            $this->application->addScript('https://www.google.com/recaptcha/api.js?render='.$this->getParam('recaptcha_site_key'));
         }
         if (!$this->getParam('forum_catalog')) {
             $statement = $this->application->getConn()->executeQuery('SELECT id FROM dir_data WHERE typ = ?', array($forum_od));
@@ -86,7 +86,7 @@ class WidgetPostAdd extends \Cetera\Widget\Templateable
                     $response = $client->request('POST', 'https://www.google.com/recaptcha/api/siteverify', [
                         'form_params' => [
                             'secret' => $this->getParam('recaptcha_secret_key'),
-                            'response' => $_REQUEST['g-recaptcha-response'],
+                            'response' => $_REQUEST['gRecaptchaResponse'],
                             'remoteip' => $_SERVER['REMOTE_ADDR'],
                         ]
                     ]);

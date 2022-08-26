@@ -30,6 +30,9 @@ class WidgetTopicList extends \Cetera\Widget\Templateable
             'form_title' => '<h3>' . $this->t->_('Создать тему') . '</h3>',
             'form_submit_text' => $this->t->_('Создать тему'),
             'form_success_text' => $this->t->_('Тема успешно создана'),
+			'recaptcha_use' => $this->getParam('recaptcha_use'),
+            'recaptcha_site_key' => $this->getParam('recaptcha_site_key'),
+            'recaptcha_secret_key' => $this->getParam('recaptcha_secret_key'),
         );
     }
 
@@ -67,6 +70,9 @@ class WidgetTopicList extends \Cetera\Widget\Templateable
                     'submit_text' => $this->getParam('form_submit_text'),
                     'success_text' => $this->getParam('form_success_text'),
                     'template' => $this->getParam('form_template') ? $this->getParam('form_template') : 'default.twig',
+					'recaptcha_use' => $this->getParam('recaptcha_use'),
+            'recaptcha_site_key' => $this->getParam('recaptcha_site_key'),
+            'recaptcha_secret_key' => $this->getParam('recaptcha_secret_key'),
                 ))->getHtml();
             }
         }

@@ -39,9 +39,9 @@ class WidgetPostList extends \Cetera\Widget\Templateable
             'form_title' => '<h3>' . $this->t->_('Добавить комментарий') . '</h3>',
             'form_submit_text' => $this->t->_('Отправить сообщение'),
             'form_success_text' => $this->t->_('Ваш комментарий принят'),
-            'form_recaptcha' => true,
-            'form_recaptcha_site_key' => '6Lc1s6chAAAAALkS7zwksn9sHjkheBnEi4EwOaEB',
-            'form_recaptcha_secret_key' => '6Lc1s6chAAAAAME4Oj0TfPbFf6Ja7DOf2E3ypmbo',
+            'recaptcha_use' => $this->getParam('recaptcha_use'),
+            'recaptcha_site_key' => $this->getParam('recaptcha_site_key'),
+            'recaptcha_secret_key' => $this->getParam('recaptcha_secret_key'),
         );
     }
 
@@ -103,10 +103,10 @@ class WidgetPostList extends \Cetera\Widget\Templateable
                     'rating_text' => $this->getParam('form_rating_text'),
                     'submit_text' => $this->getParam('form_submit_text'),
                     'success_text' => $this->getParam('form_success_text'),
-                    'recaptcha' => $this->getParam('form_recaptcha'),
-                    'recaptcha_site_key' => $this->getParam('form_recaptcha_site_key'),
-                    'recaptcha_secret_key' => $this->getParam('form_recaptcha_secret_key'),
                     'template' => $this->getParam('form_template') ? $this->getParam('form_template') : 'default.twig',
+                    'recaptcha_use' => $this->getParam('recaptcha_use'),
+                    'recaptcha_site_key' => $this->getParam('recaptcha_site_key'),
+                    'recaptcha_secret_key' => $this->getParam('recaptcha_secret_key'),
                 ))->getHtml();
             }
         }
